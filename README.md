@@ -1,24 +1,21 @@
-# React Practice SPA
+# Express - Linking a React Frontend with a Node/Express Backend
 
-Create a practice React app on a theme of your choice. 
+Now it's time to bring your ability to POST albums into the frontend!
 
-Your theme could be, for example, a personal page advertising your skills, or a page about one of your areas of interest.
+To complete this exercise you should use the server you created during the previous exercise. :-)
 
-The main goal of this exercise is to let you practice some more with React, and to make use of the skills we have covered over the last couple of weeks. :-)
+### Instructions
 
-## Goals
+1. Create a **simple** React UI. This should consist of a heading (e.g. "Add an Album to the Collection!") and a **React form** with the correct fields ("band", "album title" and "album year"). You will also need a button to submit the form.
 
-First, you should take approximately 15 minutes to create a wireframe for your site. This can be as basic as you like, but will help you decide on a layout for your UI, and which parts of the UI should be made into separate components. It will also help you to plan the relationships between different parent/child components before you start coding.
+2. You should create `state` variables in your React app and make sure that these are in charge of all data coming in. If the user types something into an input, **first** you should update the relevant state variable, and **then** re-render the app so the user can see the change in the input.
 
-While creating your app, you should try to use as many of the following skills as you can:
+**Remember:** The "value" attribute of each input will be relevant here!
 
-1. Using React **components** to render different parts of your UI
-2. Using **props** to pass data down from parent to child components
-3. Using the array method **.map()** to render a **list**, possibly of child components.
-4. Using **state** where needed (e.g. in your "App" component) to manage data in your app.
-    >- In a functional component, you can use "useState" **hooks** to create state.
-    >- **Remember:** State should always be **"the single source of truth** for any data you are keeping track of in your app!
-5. Using **event handlers** (e.g. "onClick" or "onChange") to respond to what the user does when they interact with your app.
-6. Creating a **form** (e.g. a signup form for a newsletter, or an expression of interest form), if possible with some error handling.
+3. When you submit the React form (using the `onSubmit` event handler), you should send a `fetch` request using the HTTP "PUT" method. You should create a new "album" object based on the current values of the state variables. You can send the "album" object in the `body` of your request.
 
-**Hint:** If you are having trouble thinking of a theme for your app, or ways to use React in your app, you can always look back at the exercises we have done in the last few weeks (e.g. the "To Do" app, and others). These could give you some ideas about functionality you could implement. :-)
+**Note:** If you need to, you should revise how to make a "POST" request using `fetch`, as it requires an extra argument compared to a "GET" request...
+
+4. Your server should handle the "POST" request (you should already have the logic for this) and send back a response. You should handle the response as part of your `fetch` request using either Promise syntax or `await async` syntax. When you have processed the response, make sure to log it response in the browser console so you can be sure your request was successful.
+
+5. Finally, you should give the user some feedback when a request is successfully made, for example, by making an `alert()` inviting them to submit another album.
