@@ -19,3 +19,7 @@ To complete this exercise you should use the server you created during the previ
 4. Your server should handle the "POST" request (you should already have the logic for this) and send back a response. You should handle the response as part of your `fetch` request using either Promise syntax or `await async` syntax. When you have processed the response, make sure to log it response in the browser console so you can be sure your request was successful.
 
 5. Finally, you should give the user some feedback when a request is successfully made, for example, by making an `alert()` inviting them to submit another album.
+
+**Bonus**:
+
+6. If (and only if!) you have some extra time, perhaps you could style your React page so that it looks a little better. ;-)
