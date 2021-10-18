@@ -12,6 +12,8 @@ const App = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
 
+    console.log("!", process.env);
+
     // Every time we update the "albums" state variable we will automatically re-render the app...
     // When this happens, map the new version of "albums"...
     // ... and create a new list item for every album, which we can render in the <ul> in our JSX
@@ -51,6 +53,7 @@ const App = () => {
 
         // Create new album object
         const newAlbum = {
+            username: currentUser.username,
             band: band,
             title: title,
             year: year
@@ -69,8 +72,9 @@ const App = () => {
         }
 
         // Make a post request to our server, including the new data in req.body
-        fetch("http://localhost:3000/new-album", settings)
-            .then(response => response.json())
+        // fetch(`${process.env.API_URL}/new-album`, settings)
+        fetch(`https://peaceful-peak-92131.herokuapp.com/new-album`, settings)    
+        .then(response => response.json())
             .then(data => {
                 // When we have received our response from the server, and "translated" it back to standard JS
                 // Update the "albums" state variable
@@ -104,11 +108,13 @@ const App = () => {
             }
         }
 
-        fetch("http://localhost:3000/login", settings)
+        // fetch(`${process.env.API_URL}/login`, settings)
+        fetch(`https://peaceful-peak-92131.herokuapp.com/login`, settings)
         .then(response => response.json())
         .then(data => {
             console.log(data);
             setCurrentUser(data)  // object with "username" property
+            setAlbums(data.albums) 
         })
     }
 
