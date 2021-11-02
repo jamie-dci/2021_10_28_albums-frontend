@@ -12,16 +12,6 @@ const App = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
 
-    console.log("!", process.env);
-
-    // Every time we update the "albums" state variable we will automatically re-render the app...
-    // When this happens, map the new version of "albums"...
-    // ... and create a new list item for every album, which we can render in the <ul> in our JSX
-    const renderedAlbums = albums.map(album => {
-        let albumDetails = `${album.title} by ${album.band} (${album.year}) - added by ${currentUser.username}`;
-        return <li key={album.id}>{albumDetails}</li>
-    })
-
     // Function to change the state variable corresponding to a form input the user tried to change
     const changeData = event => {
         let newValue = event.target.value;
@@ -72,8 +62,8 @@ const App = () => {
         }
 
         // Make a post request to our server, including the new data in req.body
-        // fetch(`${process.env.API_URL}/new-album`, settings)
-        fetch(`https://peaceful-peak-92131.herokuapp.com/new-album`, settings)    
+        //fetch(`${process.env.API_URL}/new-album`, settings)
+        fetch("http://localhost:3001/new-album", settings)
         .then(response => response.json())
             .then(data => {
                 // When we have received our response from the server, and "translated" it back to standard JS
@@ -108,15 +98,67 @@ const App = () => {
             }
         }
 
-        // fetch(`${process.env.API_URL}/login`, settings)
-        fetch(`https://peaceful-peak-92131.herokuapp.com/login`, settings)
-        .then(response => response.json())
+        //fetch(`${process.env.API_URL}/login`, settings)
+        fetch("http://localhost:3001/login", settings)
+        .then(response => {
+            // If we get back an error, the "ok" value will be false!
+            if (response.ok) {
+                return response.json();
+            // Handle the error on the frontend
+            } else {
+                throw new Error("Incorrect password");
+            }
+        })
         .then(data => {
             console.log(data);
             setCurrentUser(data)  // object with "username" property
-            setAlbums(data.albums) 
+            setAlbums(data.albums);
+        })
+        .catch(err => {
+            alert(err.message);
+            setUsername("");
+            setPassword("");
         })
     }
+
+    // 19/10 - New function to delete an album from the db
+    const deleteAlbum = event => {
+        // Create an object containing the relevant details - (1) current user's username, (2) ID of the deleted album
+        const deleteDetails = {
+            username: currentUser.username, // The current user's username
+            id: event.target.parentElement.id  // The id of the album we want to delete
+        }
+
+        const jsonDeleteDetails = JSON.stringify(deleteDetails);
+
+        const settings = {
+            method: "DELETE",
+            body: jsonDeleteDetails,
+            headers: {
+                "Content-Type": "application/json"
+            }
+        }
+
+        fetch("http://localhost:3001/new-album", settings)
+        .then(response => response.json())
+        .then(data => {
+            // Handle the server's response when an album has been deleted from the db
+            // Set the "albums" state variable to the new list of albums received from the server
+            // (Hopefully minus the album we tried to delete!)
+            setAlbums(data);
+            console.log("New albums list", data);
+        })
+    }
+
+    // Every time we update the "albums" state variable we will automatically re-render the app...
+    // When this happens, map the new version of "albums"...
+    // ... and create a new list item for every album, which we can render in the <ul> in our JSX
+    const renderedAlbums = albums.map(album => {
+        let albumDetails = `${album.title} by ${album.band} (${album.year}) - added by ${currentUser.username}`;
+        // 19/10 - New functionality: click the X to delete the album *from the DB*
+        // When the app re-renders, the album will no longer be rendered
+        return <li key={album.id} id={album.id}>{albumDetails} <span onClick={deleteAlbum}>X</span></li>
+    })
 
     // Conditional rendering
     return (
